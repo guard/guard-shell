@@ -14,7 +14,7 @@ Install the gem with:
 
 Add it to your Gemfile:
 
-    guard 'guard-shell'
+    gem 'guard-shell'
 
 And then add a basic setup to your Guardfile:
 
