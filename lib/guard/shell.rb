@@ -4,15 +4,67 @@ require 'guard/guard'
 module Guard
   class Shell < Guard
   
-    VERSION = '0.1.1'
+    VERSION = '0.2.0'
+    
+    #
+    # @return [Array<Pid>] a list of all the currently active forked processes
+    #   that were started as children of this process.
+    # 
+    def forked_processes
+      @forked_processes ||= []
+    end
+    
+    # Execute the command specified in the string
+    # 
+    # @param [Array<String>] commands to execute
+    #
+    def run_on_change(commands)
+      
+      commands.uniq! unless options[:allow_duplicates]
+      
+      commands.each do |command|
+        
+        if able_to_fork_process?
+          fork command
+        else
+          system command
+        end
+        
+      end
+      
+    end
 
-    # Print the result of the command, if there is a result
-    # to be printed. (see README.md)
+    # 
+    # If a number of processes has been specified by the user (enabling forking)
+    # and the system is able to generate a forked processes
+    # 
+    # TODO: Windows systems likely cannot fork and so logic should be placed
+    #   here to understand if forking is available on the system
+    # 
+    # @return [TrueClass] when the user has requested forking and the system can
+    #   handle it.
+    # 
+    def able_to_fork_process?
+      options[:max_processes].to_i > 0
+    end
+    
+    
     #
-    # @param res [Array] the result of the commands that have run
+    # @param [String] command to execute within the fork
     #
-    def run_on_change(res)
-      puts res[0] if res[0]
+    def fork(command)
+
+      # If there is room for a forked process then generate a new forked process
+      # otherwise wait until any process has finished operation and then re-enqueue
+      # this command.
+
+      if forked_processes.length < options[:max_processes]
+        forked_processes << Process.fork { Process.exec *command }
+      else
+        forked_processes.delete Process.wait
+        fork command
+      end
+
     end
 
   end

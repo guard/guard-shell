@@ -1,6 +1,18 @@
 # Add files and commands to this file, like the example:
-#   watch('file/path') { `command(s)` }
+#   watch('file/path') { "command(s)" }
 #
-guard 'shell' do
-  watch('(.*).txt') {|m| `tail #{m[0]}` }
+#  guard-shell accepts the following parameters:
+# 
+#     max_processes => Integer (normally each shell operation will block until 
+#       they are completed. If you specify a numeric value for the max-proceses 
+#       it will fork exec each command enqueued by the watcher trigger.)
+# 
+#     allow_duplicates => true (defaults to false; when a watch has been triggered 
+#       a few times it will often generate multiple of the same command - by default
+#       the extra commands are removed, setting this value to true will allow
+#       the command to be executed for all the times the watcher generated the
+#       command request)
+# 
+guard 'shell', :max_processes => 2 do
+  watch('(.*).txt') {|m| "tail #{m[0]}" }
 end
