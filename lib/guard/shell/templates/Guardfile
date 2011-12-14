@@ -1,6 +1,6 @@
 # Add files and commands to this file, like the example:
-#   watch('file/path') { `command(s)` }
+#   watch(%r{file/path}) { `command(s)` }
 #
 guard 'shell' do
-  watch('(.*).txt') {|m| `tail #{m[0]}` }
+  watch(/(.*).txt/) {|m| `tail #{m[0]}` }
 end
