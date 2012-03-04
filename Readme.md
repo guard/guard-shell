@@ -30,14 +30,14 @@ If you can do something in your shell, it is probably very easy to setup with gu
 
     guard 'shell' do
       # create a copy of the file with '.backup' at the end
-      watch('(.*)') {|m| `cp #{m[0]} #{m[0]}.backup` }
+      watch('(.*)') {|m| "cp #{m[0]} #{m[0]}.backup" }
     end
 
 
 #### Showing git st
 
     guard 'shell' do
-      watch('.*') { `git st` }
+      watch('.*') { "git st" }
     end
 
 
@@ -46,8 +46,8 @@ If you can do something in your shell, it is probably very easy to setup with gu
     guard 'shell' do
       # builds latex file to pdf and hides output
       watch('(.*).tex') do |m| 
-        `pdflatex -shell-escape #{m[0]} 1>/dev/null`
-        puts "built #{m[1]}.pdf"
+        puts "Building #{m[1]}.pdf"
+        "pdflatex -shell-escape #{m[0]} 1>/dev/null"
       end
     end
 
@@ -55,5 +55,15 @@ If you can do something in your shell, it is probably very easy to setup with gu
 #### Saying the Name of the File You Changed
 
     guard 'shell' do
-      watch('(.*)') {|m| `say #{m[0]}` }
+      watch('(.*)') {|m| "say #{m[0]}" }
+    end
+
+
+#### Fork multiple processes
+
+    guard 'shell' :max_processes => 3 do
+      watch('(.*)') do |m| 
+        puts "Saying this file #{m[0]} in a forked process"
+        "say #{m[0]}"
+      end
     end
