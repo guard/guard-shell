@@ -38,14 +38,11 @@ module Guard
     # If a number of processes has been specified by the user (enabling forking)
     # and the system is able to generate a forked processes
     # 
-    # TODO: Windows systems likely cannot fork and so logic should be placed
-    #   here to understand if forking is available on the system
-    # 
     # @return [TrueClass] when the user has requested forking and the system can
     #   handle it.
     # 
     def able_to_fork_process?
-      options[:max_processes].to_i > 0
+      Process.repond_to?(:fork) and options[:max_processes].to_i > 0
     end
     
     
