@@ -1,6 +1,17 @@
 # Add files and commands to this file, like the example:
 #   watch(%r{file/path}) { `command(s)` }
 #
+# Options :run_all is called on start and when `enter` is pressed.
+#
+#   guard 'shell', :run_all => proc { `ls *.txt` } do
+#     ...
+#   end
+#
+# To depress the exception thrown, add `2>&1` at the end of the command, such
+# as:
+#
+#   `command-not-found 2>&1`
+#
 guard 'shell' do
   watch(/(.*).txt/) {|m| `tail #{m[0]}` }
 end
