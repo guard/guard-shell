@@ -20,7 +20,22 @@ module Guard
     # @param res [Array] the result of the commands that have run
     #
     def run_on_change(res)
-      puts res[0] if res[0]
+      UI.info res[0] if res[0]
+
+      notify(res[0], $?)
+    end
+
+    # @param message [String] shell output
+    # @param status [Process::Status] process exit status
+    def notify(message, status)
+      if status && status.pid != @last_pid
+        @last_pid = status.pid
+        if status.exitstatus == 0
+          ::Guard::Notifier.notify(message || "Success", :title => 'Shell results', :image => :success)
+        else
+          ::Guard::Notifier.notify(message || "Failed", :title => 'Shell results', :image => :failed)
+        end
+      end
     end
 
   end
