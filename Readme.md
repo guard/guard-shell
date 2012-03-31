@@ -25,6 +25,7 @@ And then add a basic setup to your Guardfile:
 
 If you can do something in your shell, it is probably very easy to setup with guard-shell, here are a few examples.
 
+The last process status is used to send success/failed notification.
 
 #### Creating Backups of Files On Change
 
@@ -56,4 +57,9 @@ If you can do something in your shell, it is probably very easy to setup with gu
 
     guard 'shell' do
       watch(/(.*)/) {|m| `say #{m[0]}` }
+    end
+
+#### Run a command on start and when enter is pressed
+
+    guard 'shell', :run_all => proc { `ls *.txt` } do
     end
