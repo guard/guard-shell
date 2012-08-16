@@ -14,6 +14,7 @@ module Guard
 
     # Call #run_on_change for all files which match this guard.
     def run_all
+      return if options[:run_all] == false
       run_on_change(Watcher.match_files(self, Dir.glob('{,**/}*{,.*}').uniq))
     end
 
