@@ -94,7 +94,7 @@ end
 ``` ruby
 guard :shell do
   watch /.*\.rb$/ do |m|
-    if system('ruby -c #{m[0]}')
+    if system("ruby -c #{m[0]}")
       n "#{m[0]} is correct", 'Ruby Syntax', :success
     else
       n "#{m[0]} is incorrect", 'Ruby Syntax', :failed
